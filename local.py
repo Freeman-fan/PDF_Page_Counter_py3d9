@@ -48,9 +48,10 @@ def analyze_pdf(local_pdf_path):
 
 # 主程序入口
 if __name__ == "__main__":
-    # 用户输入本地PDF文件路径
+    # 使用无限循环以重复处理
     while True:
-        local_pdf_path = input("请输入一个文件地址，使用exit以退出：\n ")
+        # 用户输入本地PDF文件路径
+        local_pdf_path = input("请输入一个文件地址，使用exit以退出：\n")
         if local_pdf_path.lower() == 'exit':
             break
         else:
