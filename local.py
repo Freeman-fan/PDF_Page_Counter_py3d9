@@ -49,13 +49,12 @@ def analyze_pdf(local_pdf_path):
 
 # 主程序入口
 if __name__ == "__main__":
-    # 使用无限循环以重复处理
+    #拖拽启动
     if len(sys.argv)>1:
         local_pdf_path = sys.argv[1]
         analyze_pdf(local_pdf_path)
-    else:
-        print("未检测到文件输入")
-            
+    
+    # 使用无限循环以重复处理   
     while True:
         # 用户输入本地PDF文件路径
         local_pdf_path = input("请输入一个文件地址，使用exit以退出：\n")
