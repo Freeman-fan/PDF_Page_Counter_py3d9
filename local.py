@@ -34,12 +34,17 @@ def analyze_pdf(local_pdf_path):
             arr_mean = np.mean(arr, axis=(0, 1))
 
             # 判断页面是彩色还是黑白
-            if np.all(arr_mean[0] == arr_mean[1] == arr_mean[2]):
+            # 只比较RGB的整数值
+            if np.all(round(arr_mean[0], 0) == round(arr_mean[1], 0) == round(arr_mean[2], 0)):
                 black_count += 1
                 total_count += 1
             else:
                 colored_page_count += 1
                 total_count += 1
+
+        # 调试代码
+        # print(
+        #     f"第{total_count}页，RGB值为{round(arr_mean[0], 0)},{round(arr_mean[1], 0)},{round(arr_mean[2], 0)}")
 
     # 打印彩色页面和黑白页面的数量
     print(f"页数总计：{total_count}")
@@ -49,18 +54,17 @@ def analyze_pdf(local_pdf_path):
 
 # 主程序入口
 if __name__ == "__main__":
-    #拖拽启动
-    if len(sys.argv)>1:
+    # 拖拽启动
+    if len(sys.argv) > 1:
         local_pdf_path = sys.argv[1]
         analyze_pdf(local_pdf_path)
-    
-    # 使用无限循环以重复处理   
+
+    # 使用无限循环以重复处理
     while True:
         # 用户输入本地PDF文件路径
-        local_pdf_path = input("请输入一个文件地址，使用exit以退出：\n")
+        local_pdf_path = input("请输入文件地址，或拖入一个文件，使用exit以退出：\n")
         if local_pdf_path.lower() == 'exit':
             break
         else:
             # 调用analyze_pdf函数处理用户输入的文件路径
             analyze_pdf(local_pdf_path)
-        
