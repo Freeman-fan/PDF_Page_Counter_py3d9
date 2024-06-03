@@ -27,35 +27,39 @@ def analyze_pdf(local_pdf_path, threshold_num=3):
     total_count = 0
 
     # 打开PDF文件
-    with fitz.open(local_pdf_path) as doc:
-        # 遍历PDF中的每个页面
-        for page_number, page in enumerate(doc, start=1):
-            # 渲染页面到图像
-            pix = page.get_pixmap(alpha=False)
-            img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+    try:
+        with fitz.open(local_pdf_path) as doc:
+            # 遍历PDF中的每个页面
+            for page_number, page in enumerate(doc, start=1):
+                # 渲染页面到图像
+                pix = page.get_pixmap(alpha=False)
+                img = Image.frombytes(
+                    "RGB", [pix.width, pix.height], pix.samples)
 
-            # 将图像转换为NumPy数组
-            arr = np.array(img)
-            arr_mean = np.mean(arr, axis=(0, 1))
+                # 将图像转换为NumPy数组
+                arr = np.array(img)
+                arr_mean = np.mean(arr, axis=(0, 1))
 
-            # 判断页面是彩色还是黑白
-            # 只比较RGB的整数值
-            if np.all(round(arr_mean[0], threshold_num) == round(arr_mean[1], threshold_num) == round(arr_mean[2], threshold_num)):
-                black_count += 1
-                total_count += 1
-            else:
-                colored_page_count += 1
-                total_count += 1
+                # 判断页面是彩色还是黑白
+                # 只比较RGB的整数值
+                if np.all(round(arr_mean[0], threshold_num) == round(arr_mean[1], threshold_num) == round(arr_mean[2], threshold_num)):
+                    black_count += 1
+                    total_count += 1
+                else:
+                    colored_page_count += 1
+                    total_count += 1
 
-                # 调试代码
-                # print(
-                #     f"第{total_count}页，RGB值为{round(arr_mean[0], threshold_num)},{round(arr_mean[1], threshold_num)},{round(arr_mean[2],threshold_num)}")
+                    # 调试代码
+                    # print(
+                    #     f"第{total_count}页，RGB值为{round(arr_mean[0], threshold_num)},{round(arr_mean[1], threshold_num)},{round(arr_mean[2],threshold_num)}")
+    except Exception as e:
+        print(e)
+        return
 
     # 打印彩色页面和黑白页面的数量
     print(f"页数总计：{total_count}")
     print(f"彩色页数: {colored_page_count}")
     print(f"黑白页数: {black_count}")
-    print("--------------------------------")
 
 
 # 主程序入口
@@ -68,6 +72,7 @@ if __name__ == "__main__":
     # 使用无限循环以重复处理
     while True:
         # 用户输入本地PDF文件路径
+        print("--------------------------------")
         user_input_str = input("请输入文件地址，或拖入一个文件，使用exit以退出：\n")
         user_input_group = []
         if user_input_str.lower() == 'exit':
